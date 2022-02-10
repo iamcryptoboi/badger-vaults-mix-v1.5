@@ -1,10 +1,10 @@
 ## Token deposited in the vault
-WANT = "0x3472A5A71965499acd81997a54BBA8D852C6E53d"
+# WANT = "0x3472A5A71965499acd81997a54BBA8D852C6E53d"
 # For the Fantom Mainnet
-# WANT = "0x58e57cA18B7A47112b877E31929798Cd3D703b0f" ## Curve.fi USD-BTC-ETH (crv3crypto) LP Token
+WANT = "0x58e57cA18B7A47112b877E31929798Cd3D703b0f" ## Curve.fi USD-BTC-ETH (crv3crypto) LP Token
 
 ## Account that has a lot of want (we will "borrow it" for testing)
-WHALE_ADDRESS = "0x4441776e6a5d61fa024a5117bfc26b953ad1f425"
+WHALE_ADDRESS = "0x00702BbDEaD24C40647f235F15971dB0867F6bdB"
 
 ## Address for Badger Registry, used to fill in default addresses
 ## See: https://github.com/Badger-Finance/badger-registry

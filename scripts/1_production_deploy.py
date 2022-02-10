@@ -26,7 +26,7 @@ from rich.console import Console
 
 console = Console()
 
-sleep_between_tx = 1
+sleep_between_tx = 5
 
 
 def main():
@@ -44,11 +44,18 @@ def main():
     # Get actors from registry
     registry = interface.IBadgerRegistry(REGISTRY)
 
-    strategist = registry.get("governance")
-    badgerTree = registry.get("badgerTree")
-    guardian = registry.get("guardian")
-    keeper = registry.get("keeper")
-    proxyAdmin = registry.get("proxyAdminTimelock")
+    # strategist = registry.get("governance")
+    # badgerTree = registry.get("badgerTree")
+    # guardian = registry.get("guardian")
+    # keeper = registry.get("keeper")
+    # proxyAdmin = registry.get("proxyAdminTimelock")
+
+    strategist = dev
+    badgerTree = dev
+    guardian = dev
+    keeper = dev
+    proxyAdmin = "0xe53A760e78240844828D6f0089CF0cB58B77B66F"
+
 
     name = "FTM STRAT" ## In vaults 1.5 it's the full name
     symbol = "bFRM-STrat" ## e.g The full symbol (remember to add symbol from want)
@@ -79,8 +86,6 @@ def main():
         proxyAdmin,
         dev
     )
-
-    strategy = MyStrategy.at("0x3ff634ce65cDb8CC0D569D6d1697c41aa666cEA9")
 
     dev_setup = vault.setStrategy(strategy, {"from": dev})
     console.print("[green]Strategy was set was deployed at: [/green]", dev_setup)
