@@ -5,7 +5,9 @@
 
 - Video Introduction: TODO
 - Example Project: TODO
-- Full Project Walkthrough: TODO
+- Full Project Walkthrough: 
+
+This Fantom network strategy takes Curve's fUSDT+wBTC+ETH liquidity pool tokens as deposit and stakes it on Curve for yield. The rewards are in wFTM and CRV, which is swapped to XXX(most liquid) and added to fUSDT+wBTC+ETH liquidity pool.
 
 ## What you'll find here
 

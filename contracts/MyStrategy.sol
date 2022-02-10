@@ -3,6 +3,8 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
+import "@openzeppelin-contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+
 import {BaseStrategy} from "@badger-finance/BaseStrategy.sol";
 
 contract MyStrategy is BaseStrategy {
@@ -11,6 +13,18 @@ contract MyStrategy is BaseStrategy {
     // address public reward; // Token we farm
 
     address constant public BADGER = 0x3472A5A71965499acd81997a54BBA8D852C6E53d; 
+    address constant public wETH = 0x74b23882a30290451A17c44f4F05243b6b58C76d;
+    address constant public wBTC = 0x321162Cd933E2Be498Cd2267a90534A804051b11;
+    // address constant public fUSDT; 
+
+    // address constant public crv_reward;
+    // address constant public wftm_reward;
+
+
+    // Curve interface contracts
+    address constant public CURVE_ATRICRYPTO_POOL = 0x3a1659Ddcf2339Be3aeA159cA010979FB49155FF;
+    // Curve.fi crv3crypto RewardGauge Deposit 
+    address constant public CURVE_ATRICRYPTO_GAUGE = 0x00702BbDEaD24C40647f235F15971dB0867F6bdB; 
 
     /// @dev Initialize the Strategy with security settings as well as tokens
     /// @notice Proxies will set any non constant variable you declare as default value
@@ -28,10 +42,15 @@ contract MyStrategy is BaseStrategy {
         //     address(DX_SWAP_ROUTER),
         //     type(uint256).max
         // );
+        
+        // IERC20Upgradeable(want).safeApprove(CURVE_ATRICRYPTO_GAUGE, type(uint256).max);
+
+
     }
     
     /// @dev Return the name of the strategy
     function getName() external pure override returns (string memory) {
+        // return "Curve-Tricrypto-Fantom-Strategy";
         return "MyStrategy";
     }
 
@@ -47,7 +66,7 @@ contract MyStrategy is BaseStrategy {
 
     /// @dev Deposit `_amount` of want, investing it to earn yield
     function _deposit(uint256 _amount) internal override {
-        // No-op as we don't do anything
+        // ICurveGauge(CURVE_ATRICRYPTO_GAUGE).deposit(_amount);
     }
 
     /// @dev Withdraw all funds, this is used for migrations, most of the time for emergency reasons
