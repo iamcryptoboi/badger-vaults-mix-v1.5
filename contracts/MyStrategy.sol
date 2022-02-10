@@ -6,6 +6,7 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin-contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 import "../interfaces/curve/ICurve.sol";
+import "../interfaces/uniswap/IUniswapRouterV2.sol";
 
 import {BaseStrategy} from "@badger-finance/BaseStrategy.sol";
 
@@ -27,6 +28,7 @@ contract MyStrategy is BaseStrategy {
     address constant public CURVE_ATRICRYPTO_POOL = 0x3a1659Ddcf2339Be3aeA159cA010979FB49155FF;
     // Curve.fi crv3crypto RewardGauge Deposit 
     address constant public CURVE_ATRICRYPTO_GAUGE = 0x00702BbDEaD24C40647f235F15971dB0867F6bdB; 
+    address constant public SPOOKYSWAP_ROUTER = 0xF491e7B69E4244ad4002BC14e878a34207E38c29; 
 
     /// @dev Initialize the Strategy with security settings as well as tokens
     /// @notice Proxies will set any non constant variable you declare as default value
@@ -111,13 +113,26 @@ contract MyStrategy is BaseStrategy {
             return new TokenAmount[](1);
         }
 
-        // We want to swap rewards (wFTM & CRV) to wETH 
-        // and then add liquidity to tricrypto pool by depositing wETH
-        
+        /*
+            We want to swap rewards (wFTM & CRV) to wETH 
+            and then add liquidity to tricrypto pool by depositing wETH
+        */
+
         // Swap CRV to wFTM (most liquidity)
+        if (crvAmount > 0) {
+            address[] memory path = new address[](2);
+            path[0] = CRV_REWARD; 
+            path[1] = WFTM_REWARD;
+            IUniswapRouterV2(SPOOKYSWAP_ROUTER).swapExactTokensForTokens(crvAmount, 0, path, address(this), now);
+        }
 
         // Swap wFTM to wETH
-
+        if (wftmAmount > 0) {
+            address[] memory path = new address[](2);
+            path[0] = WFTM_REWARD; 
+            path[1] = wETH;
+            IUniswapRouterV2(SPOOKYSWAP_ROUTER).swapExactTokensForTokens(wftmAmount, 0, path, address(this), now);
+        }
 
         // Add liquidity for tricrypto pool by depositing wETH
         ICurveFi(CURVE_ATRICRYPTO_POOL).add_liquidity(

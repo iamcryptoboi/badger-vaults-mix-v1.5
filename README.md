@@ -3,11 +3,36 @@
 
 # WORK IN PROGRESS - USE AT YOUR OWN RISK - See Vaults 1.5 Repo for Audit Reports
 
-- Video Introduction: TODO
-- Example Project: TODO
+- Video Introduction: 
+- Example Project: 
 - Full Project Walkthrough: 
 
-This Fantom network strategy takes Curve's fUSDT+wBTC+ETH liquidity pool tokens as deposit and stakes it on Curve for yield. The rewards are in wFTM and CRV, which is swapped to XXX(most liquid) and added to fUSDT+wBTC+ETH liquidity pool.
+This Fantom network strategy takes Curve's tricrypto (fUSDT+wBTC+ETH) liquidity pool tokens as deposit and stakes it on Curve for yield. The rewards are in wFTM and CRV, which is swapped to wETH and added to tricrypto liquidity pool.
+
+This strategy was chosen based on following assumptions:
+
+- Existing best BTC badger strategy by TVL:
+  - tricrypto
+  - Convex ibBTC/crvsBTC
+  - convex cvxCRV
+  - btc/eth
+
+- Seems like users don’t want to hold native tokens, e.g. MATIC, FTM
+- Most TVL in BTC, ETC, USDC
+
+Research as of Feb 9th 9:30AM EST
+
+SpookySwap - https://spookyswap.finance/farms
+- FTM-BTC 30.77%
+
+Curve - https://ftm.curve.fi/
+- tricrypto - 3.51% + 10.5% CRV + 17.75% WFTM = 31.76%
+
+Protofi - https://fantombank.protofi.app/bfarms - Around $100M TVL, not as safe as two above.
+- BTC/USDC 113.93%
+- BTC/WETH 39.55%
+- BTC/FTM 105.33%
+
 
 ## What you'll find here
 
