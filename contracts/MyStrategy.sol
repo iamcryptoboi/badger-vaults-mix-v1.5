@@ -5,6 +5,8 @@ pragma experimental ABIEncoderV2;
 
 import "@openzeppelin-contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
+import "../interfaces/curve/ICurve.sol";
+
 import {BaseStrategy} from "@badger-finance/BaseStrategy.sol";
 
 contract MyStrategy is BaseStrategy {
@@ -43,15 +45,14 @@ contract MyStrategy is BaseStrategy {
         //     type(uint256).max
         // );
         
-        // IERC20Upgradeable(want).safeApprove(CURVE_ATRICRYPTO_GAUGE, type(uint256).max);
+        IERC20Upgradeable(want).safeApprove(CURVE_ATRICRYPTO_GAUGE, type(uint256).max);
 
 
     }
     
     /// @dev Return the name of the strategy
     function getName() external pure override returns (string memory) {
-        // return "Curve-Tricrypto-Fantom-Strategy";
-        return "MyStrategy";
+        return "Curve-Tricrypto-Fantom-Strategy";
     }
 
     /// @dev Return a list of protected tokens
@@ -66,24 +67,31 @@ contract MyStrategy is BaseStrategy {
 
     /// @dev Deposit `_amount` of want, investing it to earn yield
     function _deposit(uint256 _amount) internal override {
-        // ICurveGauge(CURVE_ATRICRYPTO_GAUGE).deposit(_amount);
+        ICurveGauge(CURVE_ATRICRYPTO_GAUGE).deposit(_amount);
     }
 
     /// @dev Withdraw all funds, this is used for migrations, most of the time for emergency reasons
     function _withdrawAll() internal override {
-        // No-op as we don't deposit
+        ICurveGauge(CURVE_ATRICRYPTO_GAUGE).withdraw(balanceOfPool());
     }
 
     /// @dev Withdraw `_amount` of want, so that it can be sent to the vault / depositor
     /// @notice just unlock the funds and return the amount you could unlock
     function _withdrawSome(uint256 _amount) internal override returns (uint256) {
+        if(_amount > balanceOfPool()) {
+            _amount = balanceOfPool();
+        }
+
+        ICurveGauge(CURVE_ATRICRYPTO_GAUGE).withdraw(_amount);
+
         return _amount;
     }
 
 
     /// @dev Does this function require `tend` to be called?
     function _isTendable() internal override pure returns (bool) {
-        return false; // Change to true if the strategy should be tended
+        // return balanceOfWant() > 0;
+        return false;
     }
 
     function _harvest() internal override returns (TokenAmount[] memory harvested) {
