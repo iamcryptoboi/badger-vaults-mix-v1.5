@@ -19,8 +19,8 @@ contract MyStrategy is BaseStrategy {
     address constant public wBTC = 0x321162Cd933E2Be498Cd2267a90534A804051b11;
     // address constant public fUSDT; 
 
-    // address constant public crv_reward;
-    // address constant public wftm_reward;
+    address constant public CRV_REWARD = 0x1E4F97b9f9F913c46F1632781732927B9019C68b;
+    address constant public WFTM_REWARD = 0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83;
 
 
     // Curve interface contracts
@@ -46,7 +46,7 @@ contract MyStrategy is BaseStrategy {
         // );
         
         IERC20Upgradeable(want).safeApprove(CURVE_ATRICRYPTO_GAUGE, type(uint256).max);
-
+        IERC20Upgradeable(wETH).safeApprove(CURVE_ATRICRYPTO_POOL, type(uint256).max);
 
     }
     
@@ -90,21 +90,49 @@ contract MyStrategy is BaseStrategy {
 
     /// @dev Does this function require `tend` to be called?
     function _isTendable() internal override pure returns (bool) {
-        // return balanceOfWant() > 0;
-        return false;
+        return true;
     }
 
     function _harvest() internal override returns (TokenAmount[] memory harvested) {
         // No-op as we don't do anything with funds
         // use autoCompoundRatio here to convert rewards to want ...
+        uint256 _before = IERC20Upgradeable(want).balanceOf(address(this));
+
+        // figure out and claim our rewards
+        ICurveGauge(CURVE_ATRICRYPTO_GAUGE).claim_rewards();
+
+        // Get total rewards (wFTM & CRV)
+        uint256 wftmAmount = IERC20Upgradeable(WFTM_REWARD).balanceOf(address(this));
+        uint256 crvAmount = IERC20Upgradeable(CRV_REWARD).balanceOf(address(this));
+
+        
+        // If no reward, then no-op
+        if (wftmAmount == 0 && crvAmount == 0) {
+            return new TokenAmount[](1);
+        }
+
+        // We want to swap rewards (wFTM & CRV) to wETH 
+        // and then add liquidity to tricrypto pool by depositing wETH
+        
+        // Swap CRV to wFTM (most liquidity)
+
+        // Swap wFTM to wETH
+
+
+        // Add liquidity for tricrypto pool by depositing wETH
+        ICurveFi(CURVE_ATRICRYPTO_POOL).add_liquidity(
+            [IERC20Upgradeable(wETH).balanceOf(address(this)), 0], 0, true
+        );
+
+
+        uint256 earned = IERC20Upgradeable(want).balanceOf(address(this)).sub(_before);
 
         // Nothing harvested, we have 2 tokens, return both 0s
-        harvested = new TokenAmount[](2);
-        harvested[0] = TokenAmount(want, 0);
-        harvested[1] = TokenAmount(BADGER, 0);
+        harvested = new TokenAmount[](1);
+        harvested[0] = TokenAmount(want, earned);
 
         // keep this to get paid!
-        _reportToVault(0);
+        _reportToVault(earned);
 
         return harvested;
     }
@@ -112,16 +140,19 @@ contract MyStrategy is BaseStrategy {
 
     // Example tend is a no-op which returns the values, could also just revert
     function _tend() internal override returns (TokenAmount[] memory tended){
-        // Nothing tended
-        tended = new TokenAmount[](2);
-        tended[0] = TokenAmount(want, 0);
-        tended[1] = TokenAmount(BADGER, 0); 
+        uint256 _amount = balanceOfWant();
+        if (_amount > 0) {
+            _deposit(_amount);
+        }
+
+        tended = new TokenAmount[](1);
+        tended[0] = TokenAmount(want, _amount);
         return tended;
     }
 
     /// @dev Return the balance (in want) that the strategy has invested somewhere
     function balanceOfPool() public view override returns (uint256) {
-        return 0;
+        return IERC20Upgradeable(CURVE_ATRICRYPTO_GAUGE).balanceOf(address(this));
     }
 
     /// @dev Return the balance of rewards that the strategy has accrued
