@@ -11,7 +11,10 @@ class StrategyResolver(StrategyCoreResolver):
         (Strategy Must Implement)
         """
         strategy = self.manager.strategy
-        return {}
+        return {
+            "gauge": strategy.CURVE_ATRICRYPTO_GAUGE(),
+            "pool": strategy.CURVE_ATRICRYPTO_POOL(),
+        }  
 
     def hook_after_confirm_withdraw(self, before, after, params):
         """
