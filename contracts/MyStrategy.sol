@@ -50,6 +50,9 @@ contract MyStrategy is BaseStrategy {
         IERC20Upgradeable(want).safeApprove(CURVE_ATRICRYPTO_GAUGE, type(uint256).max);
         IERC20Upgradeable(wETH).safeApprove(CURVE_ATRICRYPTO_POOL, type(uint256).max);
 
+        IERC20Upgradeable(CRV_REWARD).safeApprove(SPOOKYSWAP_ROUTER, type(uint256).max);
+        IERC20Upgradeable(WFTM_REWARD).safeApprove(SPOOKYSWAP_ROUTER, type(uint256).max);
+
     }
     
     /// @dev Return the name of the strategy
