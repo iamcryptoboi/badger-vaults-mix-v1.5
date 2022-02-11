@@ -66,7 +66,9 @@ contract MyStrategy is BaseStrategy {
     function getProtectedTokens() public view virtual override returns (address[] memory) {
         address[] memory protectedTokens = new address[](2);
         protectedTokens[0] = want;
-        protectedTokens[1] = BADGER;
+        protectedTokens[1] = WFTM_REWARD;
+        protectedTokens[1] = CRV_REWARD;
+        protectedTokens[1] = wETH;
         return protectedTokens;
     }
 
@@ -176,10 +178,11 @@ contract MyStrategy is BaseStrategy {
     /// @dev Return the balance of rewards that the strategy has accrued
     /// @notice Used for offChain APY and Harvest Health monitoring
     function balanceOfRewards() external view override returns (TokenAmount[] memory rewards) {
-        // Rewards are 0
         rewards = new TokenAmount[](2);
-        rewards[0] = TokenAmount(want, 0);
-        rewards[1] = TokenAmount(BADGER, 0); 
+        rewards[0] = TokenAmount(CRV_REWARD, 
+            IERC20Upgradeable(CRV_REWARD).balanceOf(address(this)));
+        rewards[1] = TokenAmount(WFTM_REWARD, 
+            IERC20Upgradeable(WFTM_REWARD).balanceOf(address(this)));
         return rewards;
     }
 }
