@@ -3,9 +3,8 @@
 
 # WORK IN PROGRESS - USE AT YOUR OWN RISK - See Vaults 1.5 Repo for Audit Reports
 
-- Video Introduction: 
-- Example Project: 
-- Full Project Walkthrough: 
+## Curve Tricrypto Fantom Strategy
+### Expected yield 31.76% as of Feb 9th, 2022.
 
 This Fantom network strategy takes Curve's tricrypto (fUSDT+wBTC+ETH) liquidity pool tokens as deposit and stakes it on Curve for yield. The rewards are in wFTM and CRV, which is swapped to wETH and added to tricrypto liquidity pool.
 
