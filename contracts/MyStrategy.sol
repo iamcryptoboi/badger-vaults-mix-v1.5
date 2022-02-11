@@ -141,7 +141,7 @@ contract MyStrategy is BaseStrategy {
 
         // Add liquidity for tricrypto pool by depositing wETH
         ICurveFi(CURVE_ATRICRYPTO_POOL).add_liquidity(
-            [IERC20Upgradeable(wETH).balanceOf(address(this)), 0], 0, true
+            [0, 0, IERC20Upgradeable(wETH).balanceOf(address(this))], 0, true
         );
 
 

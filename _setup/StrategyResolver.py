@@ -71,9 +71,6 @@ class StrategyResolver(StrategyCoreResolver):
 
         (Strategy Must Implement)
         """
-         ## If Tends work, then you can't tend again
-        assert after.get("strategy.isTendable") == False
-
         ## Tendable if we have some balance of want in strat
         assert before.get("strategy.balanceOfWant") > 0
         ## If tend works then balance after will be 0
